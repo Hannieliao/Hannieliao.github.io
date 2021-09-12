@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>三维装箱问题及可视化</title>
+    <url>/2021/08/08/%E4%B8%89%E7%BB%B4%E8%A3%85%E7%AE%B1%E9%97%AE%E9%A2%98%E5%8F%8A%E5%8F%AF%E8%A7%86%E5%8C%96/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p> 2021.8.5-2021.8.8 华数杯数学建模竞赛B题<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/B%E9%A2%98%E9%A2%98%E7%9B%AE"></p>
+<h1 id="第一问装机"><a href="#第一问装机" class="headerlink" title="第一问装机"></a>第一问装机</h1><p><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E7%AC%AC%E4%B8%80%E9%97%AE%E8%A3%85%E6%9C%BA.png" alt="第一问装机"></p>
+<h1 id="第三问装箱"><a href="#第三问装箱" class="headerlink" title="第三问装箱"></a>第三问装箱</h1><p><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E7%AC%AC%E4%B8%89%E9%97%AE%E8%A3%85%E7%AE%B1%E7%A4%BA%E4%BE%8B" alt="第三问Y3~Y1-3装箱可视化"><br>代码以Y3集装箱为例<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Y3%E9%9B%86%E8%A3%85%E7%AE%B1%E8%A3%85%E7%AE%B1%E6%96%B9%E5%BC%8F" alt="Y3集装箱"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from mpl_toolkits.mplot3d import Axes3D</span><br><span class="line">cartonnum=5;</span><br><span class="line">class Cartons:</span><br><span class="line"></span><br><span class="line">    def __init__(self, x, y, z, length, width, height, xl, zl, zh, yw):</span><br><span class="line">	#xl, zl, zh, yw：布尔决策，分别表示carton i 的长是否平行于bin的X轴，Z轴，宽是否平行于bin的Y轴，高是否平行于bin的Z轴</span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line">        self.z = z</span><br><span class="line">        self.length = length</span><br><span class="line">        self.width = width</span><br><span class="line">        self.height = height</span><br><span class="line">        self.xl = xl</span><br><span class="line">        self.zl = zl</span><br><span class="line">        self.zh = zh</span><br><span class="line">        self.yw = yw</span><br><span class="line"></span><br><span class="line">    def ifxl(self):</span><br><span class="line">        return bool(self.xl)</span><br><span class="line"></span><br><span class="line">    def ifzl(self):</span><br><span class="line">        return bool(self.zl)</span><br><span class="line"></span><br><span class="line">    def ifzh(self):</span><br><span class="line">        return bool(self.zh)</span><br><span class="line"></span><br><span class="line">    def ifyw(self):</span><br><span class="line">        return bool(self.yw)</span><br><span class="line"></span><br><span class="line">a = [[0, 0, 0, 1.05, 1.05, 1.05, 1, 0, 1, 1],</span><br><span class="line">    [0, 1.05, 0, 1.05, 1.05, 1.05, 1, 0, 0, 1],</span><br><span class="line">    [0, 0, 1.05, 0.84, 1.32, 0.64, 1, 0, 1, 1],</span><br><span class="line">    [0, 1.32, 1.05, 1.32, 0.84, 0.64, 0.52, 0, 1, 1, 1],</span><br><span class="line">    [0.84, 0, 1.05, 0.42, 0.98, 0.52, 1, 0, 1, 1]]</span><br><span class="line">#(self, x, y, z, length, width, height, xl, zl, zh, yw):</span><br><span class="line">#xl, zl, zh, yw分别表示carton i 的长是否平行于bin的X轴，Z轴，宽是否平行于bin的Y轴，高是否平行于bin的Z轴</span><br><span class="line">carton = [Cartons(a[i][0], a[i][1], a[i][2], a[i][3],</span><br><span class="line">                  a[i][4],a[i][5], a[i][6], a[i][7], a[i][8], a[i][9]) for i in range(5)]</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    ax = fig.add_subplot(1, 1, 1, projection=&#x27;3d&#x27;)</span><br><span class="line">    #ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1.8, 0.6, 0.6, 1]))</span><br><span class="line">    #ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1.92, 0.54, 0.54, 1]))</span><br><span class="line">    #ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1.7, 0.65, 0.64, 1]))</span><br><span class="line">    #ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([0.96, 1.18, 0.86, 1])) #Y7</span><br><span class="line">    ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([0.75, 1.26, 0.98, 1])) #Y3</span><br><span class="line">for i in range(0, 5):</span><br><span class="line">    x = carton[i].x</span><br><span class="line">    y = carton[i].y</span><br><span class="line">    z = carton[i].z</span><br><span class="line">    if carton[i].ifyw() and carton[i].ifzl():  # 高 宽 长</span><br><span class="line">        dx = carton[i].height</span><br><span class="line">        dy = carton[i].width</span><br><span class="line">        dz = carton[i].length</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    elif (not carton[i].ifyw()) and (carton[i].ifzl()):  # 宽 高 长</span><br><span class="line"></span><br><span class="line">        dx = carton[i].width</span><br><span class="line">        dy = carton[i].height</span><br><span class="line">        dz = carton[i].length</span><br><span class="line">    elif (not carton[i].ifyw()) and (carton[i].ifxl()):  # 长 高 宽</span><br><span class="line">        dx = carton[i].length</span><br><span class="line">        dy = carton[i].height</span><br><span class="line">        dz = carton[i].width</span><br><span class="line"></span><br><span class="line">    elif (not carton[i].ifyw()) and (carton[i].ifzh()):  # 宽 长 高</span><br><span class="line">        dx = carton[i].width</span><br><span class="line">        dy = carton[i].length</span><br><span class="line">        dz = carton[i].height</span><br><span class="line"></span><br><span class="line">    elif (not carton[i].ifzh()) and (not carton[i].ifxl()) and (not carton[i].ifzl()):  # 高 长 宽</span><br><span class="line">        dx = carton[i].height</span><br><span class="line">        dy = carton[i].length</span><br><span class="line">        dz = carton[i].width</span><br><span class="line">    else:  # 长 宽 高</span><br><span class="line">        dx = carton[i].length</span><br><span class="line">        dy = carton[i].width</span><br><span class="line">        dz = carton[i].height</span><br><span class="line"></span><br><span class="line">    ax.bar3d(x, y, z, dx, dy, dz, shade=True)</span><br><span class="line">ax.set_xlabel(&#x27;Length&#x27;)</span><br><span class="line">ax.set_ylabel(&#x27;Weight&#x27;)</span><br><span class="line">ax.set_zlabel(&#x27;Height&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plt.xlim(0, 1.456) #Y3</span><br><span class="line">plt.ylim(0, 2.438)</span><br><span class="line">ax.set_zlim(0, 1.9)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h2 id="三维装箱决策问题"><a href="#三维装箱决策问题" class="headerlink" title="三维装箱决策问题"></a>三维装箱决策问题</h2><p> <a href="https://blog.csdn.net/qq_29848559/article/details/113035681">三维装箱决策问题</a></p>
+<h2 id="python-三维装箱可视化图代码"><a href="#python-三维装箱可视化图代码" class="headerlink" title="python 三维装箱可视化图代码"></a>python 三维装箱可视化图代码</h2><p> <a href="https://blog.csdn.net/Tobby666/article/details/115941699">python 三维装箱可视化图代码</a></p>
+]]></content>
+      <tags>
+        <tag>pyhton matplotlib</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基于温度的机器学习火灾频率分析&amp;以长沙市为例</title>
+    <url>/2021/08/03/%E5%9F%BA%E4%BA%8E%E6%B8%A9%E5%BA%A6%E7%9A%84%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%81%AB%E7%81%BE%E9%A2%91%E7%8E%87%E5%88%86%E6%9E%90&amp;%E4%BB%A5%E9%95%BF%E6%B2%99%E5%B8%82%E4%B8%BA%E4%BE%8B/</url>
+    <content><![CDATA[<h1 id="Temperature-based-fire-frequency-analysis-using-machine-learning-A-case-of-Changsha-China"><a href="#Temperature-based-fire-frequency-analysis-using-machine-learning-A-case-of-Changsha-China" class="headerlink" title="Temperature-based fire frequency analysis using machine learning: A case of Changsha, China"></a>Temperature-based fire frequency analysis using machine learning: A case of Changsha, China</h1><ul>
+<li>作者：Zhisheng Xu, Dingli Liu, Long Yan *</li>
+<li>期刊：Climate Risk Management</li>
+<li>发表时间 2021-01</li>
+<li>关键词 #machine-learning #fire-frequency #climate-warning</li>
+<li>文献来源<a href="https://www.sciencedirect.com/science/article/pii/S221209632100005X">https://www.sciencedirect.com/science/article/pii/S221209632100005X</a><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2></li>
+<li>很少有研究关注非野火火灾风险与温度之间的关系、分析全球变暖对其他类型火灾的影响</li>
+<li>机器学习已广泛应用于各个领域的分类、回归和聚类，如预测分析、计算机视觉和风险分析（Madaio et al.，2016；刘等人，2019a；D’Amico 等人，2019 年；李和赵，2020 年）<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2></li>
+<li>收集了 2011-2017 年长沙市 20622 起<em>火灾事件</em>和相关<em>天气数据</em>的数据集，并生成新的数据集。通过对新数据集的数据挖掘，获得不同月份的温度和火灾频率特征。</li>
+<li>基于不同的<em>机器学习回归方法</em>（随机森林、支持向量机和多项式），建立了<em>火灾频率预测模型</em>。其中，<strong>随机森林回归模型</strong>的拟合性能最好，</li>
+<li>预测长沙 2067 年（2017 年后 50 年）的年火灾频率将增加 0.69%至 0.89%。<h2 id="研究方法"><a href="#研究方法" class="headerlink" title="研究方法"></a>研究方法</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3>基于日期的火灾事件数据集（火灾频率）+基于日期的天气数据集（最高温、最低温）<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210829115548.png"><h3 id="数据挖掘和特征选择"><a href="#数据挖掘和特征选择" class="headerlink" title="数据挖掘和特征选择"></a>数据挖掘和特征选择</h3>1 月份的火灾数量最多，7 月份是火灾数量第二大的月份。火灾频率与气候温度呈非线性关系<h3 id="模型选择与评估"><a href="#模型选择与评估" class="headerlink" title="模型选择与评估"></a>模型选择与评估</h3><h4 id="模型选择（回归模型）"><a href="#模型选择（回归模型）" class="headerlink" title="模型选择（回归模型）"></a>模型选择（回归模型）</h4></li>
+<li>线性回归模型包括岭回归、选择算子（Lasso）回归、最小绝对收缩、普通最小二乘等。</li>
+<li><em>非线性</em>模型，多项式回归、随机森林、支持向量机、神经网络等可以很好地拟合。由于 Fmean 与日气温（Tmax 和 Tmin）之间的非线性关系，因此选择<em>随机森林、支持向量机和多项式回归</em><ul>
+<li>随机森林算法<br>  随机森林算法是一种基于随机决策树的机器学习集成方法（Breiman，2001）。当采用决策树回归时，<strong>均方误差mean squared error</strong>（<strong>MSE</strong>）被用作回归标准。预测值的准确性主要取决于森林中决策树的数量。</li>
+<li>支持向量机</li>
+<li>多项式回归<h4 id="模型评估"><a href="#模型评估" class="headerlink" title="模型评估"></a>模型评估</h4></li>
+</ul>
+</li>
+<li><strong>相关系数（R2</strong>）是 MSE 的标准化版本。使用 R2 可以更有效地<strong>评估拟合性能</strong>。换句话说，R2 是因变量中可从自变量预测的方差的比例。本质上，R2 也可以通过 SSE 和总残差的平方和来计算</li>
+<li>在本研究中，R2 和 MSE 被用作评估每个模型拟合性能的主要因素。<h2 id="结果与讨论"><a href="#结果与讨论" class="headerlink" title="结果与讨论"></a>结果与讨论</h2><h3 id="回归可视化"><a href="#回归可视化" class="headerlink" title="回归可视化"></a>回归可视化</h3></li>
+<li>基于多项式、随机林和SVM的回归结果如图4-6，基于Tmax或Tmin，所有回归模型都可以很好地拟合。但是更多的原始点偏离 SVM 回归曲线，表明SVM回归模型的预测性能不如其他两个模型<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210829121150.png">!<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210829121201.png"><h3 id="模型性能表现"><a href="#模型性能表现" class="headerlink" title="模型性能表现"></a>模型性能表现</h3></li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/HPL5Q%25C(W8%5DU)KN%25UN%256BS8.png">计算不同回归模型的模型性能MSE和R2，随机森林回归模型的拟合性能最好。</li>
+<li>建立基于Tmax和Tmin的多项式回归模型可以表示为等式（8）（9）<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Y23_%7DUB%7EC_0OQ8%60ZDHZ%400GO.png">通过这些公式，消防员和决策者可以很好地理解预测模型。<h3 id="预测分析"><a href="#预测分析" class="headerlink" title="预测分析"></a>预测分析</h3></li>
+<li>根据2011年至2017年的火灾事件，建立了随机森林回归模型。预测在目前的升温速率下，2067年（2017年后50年）长沙的年火灾频率将增加0.69%-0.89%</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>智慧消防</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>不同峡谷横风偏航角隧道火灾烟气运动特性的实验研究</title>
+    <url>/2021/08/31/%E4%B8%8D%E5%90%8C%E5%B3%A1%E8%B0%B7%E6%A8%AA%E9%A3%8E%E5%81%8F%E8%88%AA%E8%A7%92%E9%9A%A7%E9%81%93%E7%81%AB%E7%81%BE%E7%83%9F%E6%B0%94%E8%BF%90%E5%8A%A8%E7%89%B9%E6%80%A7%E7%9A%84%E5%AE%9E%E9%AA%8C%E7%A0%94%E7%A9%B6/</url>
+    <content><![CDATA[<h1 id="Experimental-study-on-smoke-movement-characteristics-in-tunnel-fires-with-different-canyon-cross-wind-yaw-angles"><a href="#Experimental-study-on-smoke-movement-characteristics-in-tunnel-fires-with-different-canyon-cross-wind-yaw-angles" class="headerlink" title="Experimental study on smoke movement characteristics in tunnel fires with different canyon cross wind yaw angles"></a>Experimental study on smoke movement characteristics in tunnel fires with different canyon cross wind yaw angles</h1><p>不同峡谷横风偏航角隧道火灾烟气运动特性的实验研究</p>
+<ul>
+<li>作者：Yongjiang Shen , Ao Jiao , Tao Chen , Yuhao Li , Yuxin Gao , Zhisheng Xu , Binhui Jiang , Chuangang Fan</li>
+<li>期刊：Tunnelling and Underground Space Technology</li>
+<li>发表时间：2021-8-13</li>
+<li>关键词：#Canyon-cross-wind #wind-yaw-angle #Maximum-ceiling-gas #Smoke-back-layering #Smoke-spread </li>
+<li>文献来源：<a href="https://www.sciencedirect.com/science/article/pii/S0886779821003205?dgcid=rss_sd_all">https://www.sciencedirect.com/science/article/pii/S0886779821003205?dgcid=rss_sd_all</a><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2></li>
+<li>峡谷风的形成：峡谷是山区常见的地貌。当空气从开阔区域流经峡谷时，由于“文丘里效应”，它将加速为高速峡谷风（文丘里效应：当风吹过阻挡物时，在阻挡物的背风面上方端口附近气压相对较低，从而产生吸附作用并导致空气的流动。）</li>
+<li>具有随机方向的高速峡谷横风横穿隧道洞口时，会在隧道内产生复杂的三维流场，火灾烟气在诱导的复杂气流中发生三维流动而不是单向流动，在某些情况下，流动方向甚至与正常情况相反。<h2 id="研究现状"><a href="#研究现状" class="headerlink" title="研究现状"></a>研究现状</h2></li>
+<li>Jiao 等人（2021 年）研究了外部峡谷风会在隧道内产生漩涡，流场可以划分为不同的区域。此外，当气流进入隧道时，首先形成涡流区，然后转化为单向流。此外，单股流区域的平均横截面速度随峡谷风速呈线性变化。</li>
+<li>Luan 等人（2021 年）研究了当外部峡谷横风<em>垂直于隧道入口时</em>，隧道火灾的烟温和运动特征。结果表明，沿隧道顶板的温度呈指数衰减，上下游衰减系数不同。</li>
+<li>Zhao等人（2021 年）在研究烟雾时采用了<em>峡谷横风和纵向通风</em>对隧道火灾烟气的影响</li>
+<li>他们都发现分析了<em>峡谷风与纵向通风之间的竞争</em>，发现临界风速和烟气逆流层长度均<em>随峡谷风速</em>的增加而增加。但未完全解释<em>不同偏航角的峡谷横风</em>所产生的气流将导致复杂的原始烟气运动现象<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2>由于气流屏障，当火灾靠近上游入口时，最高天花板气体温度高于其他火灾位置。此外，基于量纲分析，建立了归一化的最高上限气体温度线性关系。由于峡谷风的影响，在水平方向和纵向方向上，最高天花板气体温度的位置不同。隧道内烟气横向分布不均匀，导致顶部烟气温度出现双峰现象。但是，当角度为 90◦-135◦时，由于负压效应，促进了烟气反向分层，阻止了下游烟气扩散.<h2 id="实验装置"><a href="#实验装置" class="headerlink" title="实验装置"></a>实验装置</h2><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%AE%9E%E9%AA%8C%E8%A3%85%E7%BD%AE" alt="图 1 实验装置"></li>
+<li>变量<ul>
+<li>四种峡谷横向风速（1.34 m/s、2.68 m/s、4.03 m/s 和 5.37 m/s，对应于全尺度下的 6 m/s、12 m/s、18 m/s 和 24 m/s）。</li>
+<li>偏航角</li>
+<li>燃料池与上游入口距离</li>
+</ul>
+</li>
+<li>热电偶布置：</li>
+<li>沿纵向中心线在隧道天花板下方布置了 56 个热电偶，范围为 0-14m，间距为 0.25m。热电偶和天花板之间的距离为 0.01 米。</li>
+<li>此外，在上游隧道入口 0-2m 范围内设置 9×7 热电偶阵列（包括纵向中心线处的 9 个热电偶），以测量复杂流场中的气体温度。热电偶被放置在扇形截面的八个相等点上<h2 id="结果与讨论"><a href="#结果与讨论" class="headerlink" title="结果与讨论"></a>结果与讨论</h2><h3 id="1-隧道内流场"><a href="#1-隧道内流场" class="headerlink" title="1 隧道内流场"></a>1 隧道内流场</h3><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E9%9A%A7%E9%81%93%E5%86%85%E6%B5%81%E5%9C%BA" alt="图 2 隧道内流场分布"><br>根据峡谷横风偏航角的不同，可将隧道内流场划分为若干区域。</li>
+<li>1、45 ◦≤ β ≤ 60◦<ul>
+<li>湍流区</li>
+<li>单向流动区。</li>
+</ul>
+</li>
+<li>2、60 ◦&lt; β ≤ 90◦,<ul>
+<li>负压区</li>
+<li>湍流区 </li>
+<li>单向流动区</li>
+</ul>
+</li>
+<li>3、90 ◦&lt; β ≤ 135◦<ul>
+<li>只有负压区    <h3 id="2-最高顶棚烟气温度-Maximum-ceiling-gas-temperature"><a href="#2-最高顶棚烟气温度-Maximum-ceiling-gas-temperature" class="headerlink" title="2 最高顶棚烟气温度 Maximum ceiling gas temperature"></a>2 最高顶棚烟气温度 Maximum ceiling gas temperature</h3><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/HRR%E3%80%81%E9%A3%8E%E9%80%9F%E5%AF%B9%E6%B0%94%E6%B5%81" alt="图 3 最高顶棚烟气温度"></li>
+</ul>
+</li>
+<li>由于气流的冷却效应与 HRR 变化之间的竞争，在 45◦-90◦范围内，随着风偏航角的增大，最大顶棚气体温度升高, 但当角度在 90◦-135◦时保持稳定</li>
+<li>Df=1.5m 的最高天花板气体温度高于其他火灾位置。这是由于上游入口处峡谷横风引起的<strong>气流屏障</strong>造成的。（ <strong>airflow barrier</strong> induced by the<br>canyon cross wind ）</li>
+<li>温度变化是偏航角（产生涡流形成气流屏障）和风速（冷却降温）相互竞争的结果：<ul>
+<li>45 ◦≤ β ≤ 90◦, 高速峡谷风进入隧道，在上游入口附近形成湍流区。该区域存在许多涡流，这些<em>涡流阻碍了烟气的排出</em>，促进了烟气的<em>积聚</em>。因此，气体温度升高。同时，湍流气流冷却烟雾并降低气体温度。</li>
+<li>当β较小或 u 较高时（β=45 的所有速度, <em>冷却效果较强</em>，导致气体温度较低；</li>
+<li>当β较大或 u 较低（所有其他条件）时，气流屏障更强，因此气体温度更高。</li>
+</ul>
+</li>
+<li><strong>无量纲最高顶棚烟气温度表达式</strong><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210904173803.png"></li>
+<li>此外，还将本研究的结果与 Kurioka 等人的模型（Kurioka 等人，2003 年）和 Li 等人的模型（Li 等人，2011 年）进行了比较，表明等式（1）在预测中表现良好<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210904173836.png" alt="图 4 预测模型对比"><h3 id="3-最高顶棚烟气温度位置"><a href="#3-最高顶棚烟气温度位置" class="headerlink" title="3 最高顶棚烟气温度位置"></a>3 最高顶棚烟气温度位置</h3></li>
+<li>45 ◦≤ β ≤ 90◦时, Df=3.5m、5.5m 和 10.5m 的火源均位于单向流区或湍流与单向流区的边界处。气流方向指向下游，导致最高天花板气体温度的位置向下游移动。</li>
+<li>然而，当 90◦&lt; β ≤ 135◦, 三个火源<em>均在负压区</em>。出现负压感应，气流方向指向上游通道，因此最高顶棚烟气温度的位置<em>向上游移动</em>。<h3 id="4-最高顶棚烟气温度双峰值"><a href="#4-最高顶棚烟气温度双峰值" class="headerlink" title="4 最高顶棚烟气温度双峰值"></a>4 最高顶棚烟气温度双峰值</h3></li>
+<li>当隧道内的诱导气流速度较低时，顶棚烟气温度的纵向分布只有一个峰值。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210904174644.png" alt="图 5 典型纵向顶棚烟气温度分布单峰现象">该峰值位置靠近火源，同时也是顶棚烟气温度的最大值</li>
+<li>然而，当诱导速度较高时，顶棚烟气温度纵向分布将出现双峰值。第一个峰值在<em>火源附近</em>的温度分布曲线上形成一个明显的峰值，</li>
+<li>然后顶棚烟气温度沿下游隧道降低。经过一定距离后，温度升高，出现第二个峰值。第二个峰值<em>靠近下游隧道</em>，是顶棚烟气温度的最大值<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210904174859.png" alt="图 6 最高顶棚烟气温度双峰现象"></li>
+<li>原因：<em>横向烟度分布不均匀</em>，当β较小时或 u 较高时，隧道<em>中部的烟气</em>比<em>侧壁</em>附近的烟气移动<em>快</em>，观察到 V 型烟雾，烟气层中形成间隙<h3 id="5-烟气逆流层长度与下游烟气蔓延长度"><a href="#5-烟气逆流层长度与下游烟气蔓延长度" class="headerlink" title="5  烟气逆流层长度与下游烟气蔓延长度"></a>5  烟气逆流层长度与下游烟气蔓延长度</h3></li>
+<li>图 7 显示了纵向顶棚烟气温度温度分布、烟气逆流层长度和下游烟气蔓延长度<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210904180623.png" alt="图 7 烟气逆流层长和下游烟气蔓延长度"></li>
+<li>当风偏航角为 45 ◦-90◦时, 峡谷风阻碍了烟气逆流，促进了下游烟气的扩散。</li>
+<li>但当角度为 90°◦-135◦时，由于负压效应，促进了烟气逆流，阻止了下游烟气扩散<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>通过一系列模型隧道火灾试验，以研究<em>峡谷横风偏航角</em>对<strong>顶棚最高烟气温度值和位置、烟气逆流层长度和下游烟蔓延长度</strong>的影响。</li>
+<li>由于气流的冷却效应与 HRR 变化之间的竞争，在 45°◦-90◦范围内，<em>随着风偏航角的增大，最大顶棚气体温度升高</em>, 但当角度在 90◦-135◦时保持稳定。在无量纲分析的基础上，建立了<em>最大顶棚气体温度与峡谷横风偏航角之间的线性关系</em>。</li>
+<li>此外，还<strong>提出了气流屏障</strong>和<strong>天花板气体温度的双峰现象 （Double peak value of ceiling gas temperature ）</strong>  最高顶棚烟气温度的位置与火源位置有关。对于靠近上游入口的火灾，最高顶棚烟气温度的位置在隧道的纵向和水平方向上移动，但是，对于远离上游入口的火灾，其仅在纵向上移动 </li>
+<li>45 ◦≤ β ≤ 90◦, 峡谷横促进了下游烟气的扩散。烟背层长度随β的增大而增大，随 u 的增大而减小。然而，当 90◦&lt; β ≤ 135◦, 出现负压诱导。促进了烟气反向分层，抑制了下游烟气扩散。</li>
+</ul>
+<hr>
+<ul>
+<li>个人笔记仅供参考，原文欣赏请移步E<a href="https://www.sciencedirect.com/science/article/pii/S0886779821003205?dgcid=rss_sd_all">https://www.sciencedirect.com/science/article/pii/S0886779821003205?dgcid=rss_sd_all</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tunnel fire</category>
+        <category>Canyon cross wind</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>峡谷横风偏航角对火灾气流和火焰特性的影响</title>
+    <url>/2021/06/02/%E5%B3%A1%E8%B0%B7%E6%A8%AA%E9%A3%8E%E5%81%8F%E8%88%AA%E8%A7%92%E5%AF%B9%E7%81%AB%E7%81%BE%E6%B0%94%E6%B5%81%E5%92%8C%E7%81%AB%E7%84%B0%E7%89%B9%E6%80%A7%E7%9A%84%E5%BD%B1%E5%93%8D/</url>
+    <content><![CDATA[<h1 id="Experimental-study-on-the-effect-of-canyon-cross-wind-yaw-angle-on-airflow-and-flame-characteristics-in-a-tunnel"><a href="#Experimental-study-on-the-effect-of-canyon-cross-wind-yaw-angle-on-airflow-and-flame-characteristics-in-a-tunnel" class="headerlink" title="Experimental study on the effect of canyon cross wind yaw angle on airflow and flame characteristics in a tunnel"></a>Experimental study on the effect of canyon cross wind yaw angle on airflow and flame characteristics in a tunnel</h1><ul>
+<li>Authors: Ao Jiao,Yongjiang Shen,Zhengyang Wang,Tao Chen,Haowen Tao,Zhisheng Xu,Chuangang Fan</li>
+<li>Date: [[06/2021]]</li>
+<li>Journal: Journal of Wind Engineering &amp; Industrial Aerodynamics</li>
+<li>Tags: #Tunnel-fire #canyon-cross-mind #wind-yaw-angle</li>
+<li>文献来源：<a href="https://www.sciencedirect.com/science/article/pii/S0167610521001021">https://www.sciencedirect.com/science/article/pii/S0167610521001021</a></li>
+</ul>
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>  “一带一路”与西部大开发等战略的推进，隧道在包括山区在内的各种地方修建，在山区，由于海拔高、地势低、地形复杂，气候多变。峡谷是山区的典型地貌。当风吹过峡谷时，会被挤压效应加速。峡谷横风的方向随着地形、季节和气压而变化，也影响着隧道内的流场。<br>  <img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%B3%A1%E8%B0%B7%E5%81%8F%E8%88%AA%E8%A7%92%E7%A4%BA%E6%84%8F.png" alt="图 1 峡谷横风偏航角"></p>
+<h2 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h2><ul>
+<li> 1：20 的隧道模型，基于 froude 标度的模型实验（被广泛应用于小尺度模型来模拟大尺度火灾的传热行为），模拟全尺寸风洞的气流分布和火焰特性。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%B3%A1%E8%B0%B7%E6%A8%AA%E9%A3%8E%E5%81%8F%E8%88%AA%E8%A7%92%E5%AE%9E%E9%AA%8C%E8%A3%85%E7%BD%AE" alt="图 2 实验装置"></li>
+<li> 实验设备：轴流风扇和气流平衡装置、挡板模拟山峰、热线风速计（hot-wire anemometer）、电子天平（测质量燃烧速率）、皮托管和压力传感器（pitot tube and the pressure transducer）</li>
+<li>火源：乙醇池火（ethanol pool）</li>
+<li>风偏航角范围：45°-135°，间隔为15°<h2 id="结果与讨论"><a href="#结果与讨论" class="headerlink" title="结果与讨论"></a>结果与讨论</h2><h3 id="气流分布及速度（Airflow-velocity-in-the-tunnel）"><a href="#气流分布及速度（Airflow-velocity-in-the-tunnel）" class="headerlink" title="气流分布及速度（Airflow velocity in the tunnel）"></a>气流分布及速度（Airflow velocity in the tunnel）</h3></li>
+<li>高峡谷横风速度下，气流分为负压区（negative pressure zone）、湍流区（turbulence zone）和单向流动区（unidirectional zone）</li>
+<li>隧道内的气流速度 v 经模型峡谷横风速度u 进行归一化处理，如图3所示。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E9%9A%A7%E9%81%93%E5%86%85%E7%9A%84%E6%B0%94%E6%B5%81%E9%80%9F%E5%BA%A6%20v%20%E7%BB%8F%E6%A8%A1%E5%9E%8B%E5%B3%A1%E8%B0%B7%E6%A8%AA%E9%A3%8E%E9%80%9F%E5%BA%A6u%20%E5%BD%92%E4%B8%80%E5%8C%96%E5%A4%84%E7%90%86" alt="图 3 归一化气流速度">不同情况下的归一化气流速度非常接近。当 45°＜β＜60°，风速随着β值的增加而降低，但 90°-135°时保持稳定；β＞135°时峡谷风很少进入隧道。<br>这些都表明<strong>隧道内气流分布</strong>(即流场的分区)主要<strong>受β影响</strong>。<strong>峡谷风速u</strong>只影响<strong>气流速度</strong>值。<h3 id="火焰倾角（flame-tilt-angle）"><a href="#火焰倾角（flame-tilt-angle）" class="headerlink" title="火焰倾角（flame tilt angle）"></a>火焰倾角（flame tilt angle）</h3></li>
+<li>火源附近的流场影响火焰行为。当β（45°-90°），峡谷横风偏角对燃烧速率和火焰倾斜特性影响很大，当β（90°-135°），影响很小<h3 id="质量燃烧速率模型（mass-burning-rate）"><a href="#质量燃烧速率模型（mass-burning-rate）" class="headerlink" title="质量燃烧速率模型（mass burning rate）"></a>质量燃烧速率模型（mass burning rate）</h3></li>
+<li>建立了质量燃烧速率标准化模型（normalized model），以近似计算不同火源位置与峡谷横风偏航角下的质量燃烧速率。D* 归一化距离（D* =D/L D-火源距上游出口距离；L-模型隧道长度）<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E8%B4%A8%E9%87%8F%E7%87%83%E7%83%A7%E9%80%9F%E7%8E%87%E6%A0%87%E5%87%86%E5%8C%96%E6%A8%A1%E5%9E%8B" alt="图 4 质量燃烧速率标准化模型">m’’- 质量燃烧速率 m’’* -归一化后质量燃烧速率（ m’’* =m’’ ÷β=90°时的 m’’）<h3 id="平均火焰长度（mean-flame-length）"><a href="#平均火焰长度（mean-flame-length）" class="headerlink" title="平均火焰长度（mean flame length）"></a>平均火焰长度（mean flame length）</h3></li>
+<li>火焰尖端 flame tip：到池中心（确定为原点）的最大距离线的交叉点和<em>像素点火焰出现概率=0.5</em> 的轮廓线。</li>
+<li> 平均火焰长度 Lf：从原点（池火中心）到火焰尖端的距离。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%9B%BE5%20%E5%B9%B3%E5%9D%87%E7%81%AB%E7%84%B0%E9%95%BF%E5%BA%A6" alt="图 5 火焰图像"></li>
+<li> 归一化平均火焰长度 Lf* =Lf/Lf0（自然通风下的火焰长度）<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2></li>
+<li>揭示了<strong>峡谷横风偏航角</strong>和<strong>风速</strong>耦合作用下山体隧道内的<strong>气流分布</strong>。给出了典型的<em>火焰形状</em>和<em>火焰特征</em>的变化规律，为火灾风险评估提供了重要参考。</li>
+<li>此外，给出了质量燃烧速率、火焰倾角和平均火焰长度的<strong>归一化结果</strong>，可用于隧道火灾发展预测。</li>
+<li><strong>局限性</strong>：峡谷横向风是作为均匀流实现的，而脉动风的影响被忽略。本研究的重点是火焰特性，而烟气蔓延行为和温度分布将在今后的研究中进行。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tunnel fire</category>
+        <category>Canyon cross wind</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>峡谷横风对隧道火灾烟气逆流层及临界速度的实验研究</title>
+    <url>/2021/06/03/%E5%B3%A1%E8%B0%B7%E6%A8%AA%E9%A3%8E%E5%AF%B9%E9%9A%A7%E9%81%93%E7%81%AB%E7%81%BE%E7%83%9F%E6%B0%94%E9%80%86%E6%B5%81%E5%B1%82%E5%8F%8A%E4%B8%B4%E7%95%8C%E9%80%9F%E5%BA%A6%E7%9A%84%E5%AE%9E%E9%AA%8C%E7%A0%94%E7%A9%B6/</url>
+    <content><![CDATA[<h1 id="An-experimental-study-on-smoke-back-layering-and-critical-velocity-in-tunnel-fires-with-canyon-cross-wind"><a href="#An-experimental-study-on-smoke-back-layering-and-critical-velocity-in-tunnel-fires-with-canyon-cross-wind" class="headerlink" title="An experimental study on smoke back-layering and critical velocity in tunnel fires with canyon cross wind"></a>An experimental study on smoke back-layering and critical velocity in tunnel fires with canyon cross wind</h1><ul>
+<li>作者：Wangda Zhao , Richeng Ouyang , Qian Ran , Tao Chen , Zhisheng Xu , Mengzhen Zou ,<br>Chuangang Fan *</li>
+<li>期刊：Journal of Wind Engineering and Industrial Aerodynamics</li>
+<li>发表时间：2020-11-22</li>
+<li>关键词：#Smoke-back-layering #Critical-velocity #canyon-cross-mind #Longitudinal-ventilation</li>
+<li>文献来源：<a href="https://www.sciencedirect.com/science/article/pii/S0167610520303871">https://www.sciencedirect.com/science/article/pii/S0167610520303871</a><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2>本文对高山峡谷地区公路隧道在峡谷横风作用下的热烟反分层和临界风速进行了实验研究。<strong>下游洞口受峡谷横风作用</strong>，<strong>上游洞口设置纵向通风装置</strong>。<em>通过</em>改变峡谷横风和纵向通风的<em>速度</em>以及火源位置，研究了烟气运动现象。实验结果表明，烟气逆流层长度随纵向风速的增大而减小，临界风速和烟气逆流层长度均随峡谷横向风速的增大而增大。这是因为隧道中向上游的气流速度随着峡谷横风速度的增加而增加。相反，火灾的下游烟气扩散长度随峡谷横向风速的增大而减小，随纵向通风速度的增大而增大。考虑峡谷横风，建立了临界风速方程。<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2></li>
+<li>高海拔超长公路隧道的建设</li>
+<li>火灾产生的烟气和有毒气体难以排放，疏散困难。通常需要在隧道中安装竖井或射流风机等排气装置安装前应正确理解自然条件下的火灾烟气运动</li>
+<li>目前对隧道火灾临界速度和烟气反分层的研究<em>主要集中在隧道内的环境和边界条件上</em>，但很少注意<em>隧道外环境的影响</em>。</li>
+<li>预测峡谷横风在隧道内可能有两种情况。<ul>
+<li>一个是峡谷横风诱导隧道内的气流流向下游隧道洞口，烟气也随气流流向下游隧道洞口。在这种情况下，隧道内的<em>峡谷横风和纵向通风</em>具有<em>相同</em>的效果，从而减少了烟气反分层长度和临界速度。</li>
+<li>二是峡谷横风进入隧道，使气流向上游隧道流动，增加了烟气回流层的长度。在这种情况下，峡谷横风引起的隧道内气流方向<em>与纵向通风</em>方向<em>相反</em>。<h2 id="研究方法"><a href="#研究方法" class="headerlink" title="研究方法"></a>研究方法</h2><h3 id="小尺寸装置"><a href="#小尺寸装置" class="headerlink" title="小尺寸装置"></a>小尺寸装置</h3>1：20<br>弗劳德数表征：惯性力和浮力之间的比率<br>在本研究中，基于弗劳德数的 HRR（Q）、速度（V）、质量损失率（μm）和温度（T）的比例关系如表1所示。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906184241.png" alt="表 1 "><h3 id="实验装置"><a href="#实验装置" class="headerlink" title="实验装置"></a>实验装置</h3></li>
+</ul>
+</li>
+<li>隧道下游入口的轴流风机（A 风机）用于模拟峡谷横风，可将其视为小型风洞，</li>
+<li>上游入口的轴流风机（B 风机）用于为风洞提供纵向通风<br>下游隧道洞口装有挡板以模拟山体。风机 A 整流器出口表面靠近挡板</li>
+<li>HRR 由公式（5）计算<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906184721.png"><br>变量：5 个火灾位置、6 个峡谷横向风速和 6 个纵向通风速度。<h2 id="结果与讨论"><a href="#结果与讨论" class="headerlink" title="结果与讨论"></a>结果与讨论</h2><h3 id="1-隧道内气流-Airflow-in-tunnel"><a href="#1-隧道内气流-Airflow-in-tunnel" class="headerlink" title="1 隧道内气流 Airflow in tunnel"></a>1 隧道内气流 Airflow in tunnel</h3></li>
+<li>研究峡谷横风和纵向通风联合作用下隧道内烟气逆流层之前，必须先研究峡谷横风影响下的隧道内流场。</li>
+<li>表 3 总结了隧道内<em>不同位置的气流方向</em>。（vcy-模拟峡谷横风速度）<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906185117.png"></li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906185433.png" alt="图 1 峡谷横风影响下隧道内的气流速度">由图 1 可以看出，下游隧道洞口附近（D=1.5m）的位置具有隧道内最低的气流速度，这是由于<em>隧道洞口外峡谷横风引起的负压效应</em>。负压效应导致隧道内气流流向下游隧道入口。同时，来自峡谷横风的气流流入隧道。在 D=1.5m 处，与负压引起的气流相比，峡谷横风进入隧道的气流起主导作用，因此主要气流方向是朝向上游隧道。随着到下游入口的距离增加，负压效应变弱，导致气流速度增加。</li>
+<li>根据气流方向和速度，隧道内的气流可分为三个区域，即负压区（靠近下游隧道洞口的区域受到高速峡谷横风的影响，从而诱导气流流向下游洞口）、过渡区和单向流动区<h2 id="2-下游烟气蔓延距离-Spread-distance-of-downstream-smoke"><a href="#2-下游烟气蔓延距离-Spread-distance-of-downstream-smoke" class="headerlink" title="2 下游烟气蔓延距离 Spread distance of downstream smoke"></a>2 下游烟气蔓延距离 Spread distance of downstream smoke</h2></li>
+<li>用温度测量距离：如果热电偶检测到温升大于或等于 5°C，则表示烟雾到达该位置。</li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906195459.png" alt="图 2 峡谷横风对纵向通风隧道中 LDOWN 的影响">（a）是没有纵向风的情况。图中的空心点表示烟气从下游隧道洞口溢出。在一定的纵向通风速度下，烟气在火焰下游侧的扩散长度随峡谷横向风速的增大而减小，而烟气后分层长度随峡谷横向风速的增大而增大。<em>当火灾位于负压区时</em>，气流对该区烟气的负压效应起主导作用，导致<em>无论峡谷侧风有多大，火灾烟气都可能从下游洞口溢出</em> <h2 id="3-烟气逆流层长度"><a href="#3-烟气逆流层长度" class="headerlink" title="3 烟气逆流层长度"></a>3 烟气逆流层长度</h2></li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906200239.png" alt="图 3 Df=3.5 m 处峡谷横向风速为 3.35 m/s 时的典型纵向温度分布。">纵向通风速度为 1.04 m/s 时，上游烟锋位于 D=6.25 m，因此烟气逆流层长度为 6.25-3.5=2.75 m。</li>
+<li>当 Vcy=3.35m/s、VL=0.24m/s、0.71m/s 时，隧道内仍存在烟气逆流现象。可以推测，使烟气逆流层长度等于 0 的临界速度介于 1.04 m/s 和 1.37 m/s 之间。插值法求得临界速度为 1.33 m/s。<h2 id="4-临界速度"><a href="#4-临界速度" class="headerlink" title="4 临界速度"></a>4 临界速度</h2></li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906200930.png" alt="图 4 归一化临界速度随峡谷横风速度变化的拟合曲线"><ul>
+<li>归一化临界速度<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210906201013.png"></li>
+</ul>
+</li>
+<li>根据本研究实验结果，提出了临界风速与峡谷横风速度之间的关系。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/OSA7_FQ">(5)X%60U%40C1(9XU_D.png)峡谷横风环境下的临界速度大致分为两部分。一部分用于减弱峡谷横风引起的隧道内气流。第二部分用于在无峡谷横风的情况下，防止烟气逆流的临界速度。</li>
+</ul>
+<hr>
+<ul>
+<li>个人笔记仅供参考，原文欣赏请移步<a href="https://www.sciencedirect.com/science/article/pii/S0167610520303871">https://www.sciencedirect.com/science/article/pii/S0167610520303871</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tunnel fire</category>
+        <category>Canyon cross wind</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>强环境风作用下自然通风隧道内烟气扩散特性</title>
+    <url>/2021/05/31/%E5%BC%BA%E7%8E%AF%E5%A2%83%E9%A3%8E%E4%BD%9C%E7%94%A8%E4%B8%8B%E8%87%AA%E7%84%B6%E9%80%9A%E9%A3%8E%E9%9A%A7%E9%81%93%E5%86%85%E7%83%9F%E6%B0%94%E6%89%A9%E6%95%A3%E7%89%B9%E6%80%A7/</url>
+    <content><![CDATA[<h1 id="Smoke-spread-characteristics-inside-a-tunnel-with-natural-ventilation-under-a-strong-environmental-wind"><a href="#Smoke-spread-characteristics-inside-a-tunnel-with-natural-ventilation-under-a-strong-environmental-wind" class="headerlink" title="Smoke spread characteristics inside a tunnel with natural ventilation under a strong environmental wind"></a>Smoke spread characteristics inside a tunnel with natural ventilation under a strong environmental wind</h1><ul>
+<li>作者 Chuangang Fan, Li Zhang, Shucheng Jiao, Zhiwei Yang, Manhou Li, Xiaoping Liu</li>
+<li>期刊 Tunnelling and Underground Space Technology</li>
+<li>发表时间 2018-12</li>
+<li>关键词 #Environmental-wind #Tunnel #Shaft #Natural-ventilation #Smoke-spread</li>
+<li>文献来源 <a href="https://www.sciencedirect.com/science/article/pii/S0886779817307976">https://www.sciencedirect.com/science/article/pii/S0886779817307976</a><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2></li>
+<li>火灾作为隧道内最严重的交通事故之一事故，许多学者对隧道火灾烟气的控制进行了大量的研究。近年来，一些学者已经研究了隧道外环境风对自然通风有效性的影响。然而，这些研究中的风速（最大风速约 3m/s）不足以反映强环境风情况下的自然通风情况。</li>
+<li>本研究利用火灾模拟软件 FDS 建立了隧道模型，研究了强环境风作用下自然通风隧道内烟气的扩散特性。考虑了四种环境风速（3-9m/s）和三种热释放率（3-20MW）组合共 12 种火灾工况，对强环境风作用下隧道内烟气传播速度、火灾初期的下吸式现象、火灾稳定期的排烟特性、隧道和竖井内的温度分布以及堵塞现象的发生进行了详细的研究，可为地下和高层建筑火灾中排烟系统的设计与管理提供参考。<h2 id="模型建立"><a href="#模型建立" class="headerlink" title="模型建立"></a>模型建立</h2><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E9%9A%A7%E9%81%93%E6%A8%A1%E5%9E%8B" alt="图 1 隧道模型"></li>
+<li>隧道模型：长 100m、宽 10m、高 5m，竖井长 2m、宽 2m、高 5m。</li>
+<li>针对城市隧道内小型轿车、公共汽车和货车，分别模拟了三种相应的热释放率（HRR），即 3MW、10MW 和 20MW。</li>
+<li>火源设置在模型隧道中心，距离隧道出口 50m。一个垂直竖井位于火灾的右侧，水平距离为 25 米。</li>
+<li>测温点设置：在火源右侧每隔 8m 设置 6 个测温点。竖井底部下方设置了一列垂直温度测量点。</li>
+<li>两个质量流量数据采集点位于竖井顶部开口处，用于记录竖井排出的烟气质量流量和吸入竖井的空气质量流量。</li>
+<li>环境温度设定为 20°C。环境压力设定为 101 kPa。</li>
+<li>扩展计算域：隧道出口附近添加的扩展计算域为 1m 长、12m 宽、5m 高，竖井顶部开口附近添加的扩展计算域为为 10m 长、6m 宽、10m 高</li>
+<li>网格划分：网格大小取 0.167m，每次测试的网格总数为 1,455, 840</li>
+<li>环境风速 V ：3m/s、5m/s、7m/s 和 9m/s。 <img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/12%E7%A7%8D%E5%B7%A5%E5%86%B5" alt="图 2 12种模拟工况"><h2 id="研究结果与讨论"><a href="#研究结果与讨论" class="headerlink" title="研究结果与讨论"></a>研究结果与讨论</h2><h3 id="1-隧道内烟气蔓延情况"><a href="#1-隧道内烟气蔓延情况" class="headerlink" title="1 隧道内烟气蔓延情况"></a>1 隧道内烟气蔓延情况</h3><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E7%83%9F%E6%B0%94%E8%94%93%E5%BB%B6%E6%83%85%E5%86%B5" alt="图 3 烟雾蔓延至 25 m（竖井正下方）和火灾下游 50 m 的时间比较"></li>
+<li>在隧道火灾过程中，烟气传播速度主要受 HRR 的影响，而不受环境风速的影响。随着 HRR 的增大，浮力增大，烟气扩散速度不断增大。<h3 id="2-竖井排烟"><a href="#2-竖井排烟" class="headerlink" title="2 竖井排烟"></a>2 竖井排烟</h3><h4 id="2-1-火灾初期的倒灌气流（downdraught）"><a href="#2-1-火灾初期的倒灌气流（downdraught）" class="headerlink" title="2.1 火灾初期的倒灌气流（downdraught）"></a>2.1 火灾初期的倒灌气流（downdraught）</h4><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E7%AB%96%E4%BA%95%E6%8E%92%E5%87%BA%E7%9A%84%E7%83%9F%E6%B0%94%E5%92%8C%E5%90%B8%E5%85%A5%E7%9A%84%E7%A9%BA%E6%B0%94%E7%9A%84%E8%B4%A8%E9%87%8F%E6%B5%81%E9%87%8F" alt="图 4 竖井排出的烟气和吸入的空气的质量流量（HRR=3MW ）"><br>在隧道火灾的早期阶段，会出现气流倒灌现象，表明通风井可以排出少量烟雾，但会从隧道外的环境风中吸入大量新鲜空气。当烟雾扩散变得稳定时，吸入的空气量减少到接近零，这种负面现象将消失。<br><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E9%9A%A7%E9%81%93%E5%86%85%E7%83%9F%E9%9B%BE%E7%9A%84%E6%89%A9%E6%95%A3%EF%BC%88HRR%3D3MW%20%EF%BC%89" alt="图 5 模拟显示隧道内烟雾的扩散（HRR=3MW ）"><br><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E7%83%9F%E9%9B%BE%E9%80%9F%E5%BA%A6%E7%9F%A2%E9%87%8F%E5%9C%BA" alt="图 6 模拟显示隧道内烟雾速度矢量场"><h4 id="2-2-火灾稳定期的排烟"><a href="#2-2-火灾稳定期的排烟" class="headerlink" title="2.2 火灾稳定期的排烟"></a>2.2 火灾稳定期的排烟</h4><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%9B%BE%2010%20(a)%20%E6%89%80%E6%9C%89%E5%B7%A5%E5%86%B5%E4%B8%8B%E7%AB%96%E4%BA%95%E6%8E%92%E5%87%BA%E7%9A%84%E7%83%9F%E6%B0%94%E8%B4%A8%E9%87%8F%E6%B5%81%E7%8E%87" alt="图 7 所有工况下竖井排出的烟气质量流率"><br><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E7%83%9F%E6%B0%94%E7%9A%84%E6%97%A0%E9%87%8F%E7%BA%B2%E8%B4%A8%E9%87%8F%E6%B5%81%E7%8E%87%E5%92%8C%E6%97%A0%E9%87%8F%E7%BA%B2%E9%A3%8E%E9%80%9F%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB" alt="图 8 烟气的无量纲质量流率和无量纲风速的关系">这两个无量纲参数遵循良好的指数关系<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E8%BF%99%E4%B8%A4%E4%B8%AA%E6%97%A0%E9%87%8F%E7%BA%B2%E5%8F%82%E6%95%B0%E9%81%B5%E5%BE%AA%E8%89%AF%E5%A5%BD%E7%9A%84%E6%8C%87%E6%95%B0%E5%85%B3%E7%B3%BB"></li>
+<li>无量纲质量流率：ṁs/ ṁs, ref (ṁs, ref 是 V=3 m/s 时的参考质量流率)<br>在烟气扩散的稳定期，竖井的排烟效率受环境风速和 HRR 的影响。风速越高或 HRR 越小，排烟效率越低。<h3 id="3-烟气温度"><a href="#3-烟气温度" class="headerlink" title="3 烟气温度"></a>3 烟气温度</h3><h4 id="3-1-隧道和竖井内的温度分布"><a href="#3-1-隧道和竖井内的温度分布" class="headerlink" title="3.1 隧道和竖井内的温度分布"></a>3.1 隧道和竖井内的温度分布</h4><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%9B%BE%2012%20%E9%9A%A7%E9%81%93%E5%92%8C%E7%AB%96%E4%BA%95%E5%86%85%E7%83%9F%E6%B0%94%E7%9A%84%E6%B8%A9%E5%BA%A6%E5%88%86%E5%B8%83%EF%BC%88HRR%3D20MW%EF%BC%89" alt="图 9 隧道和竖井内烟气的温度分布（HRR=20MW）"></li>
+<li>隧道内的热烟层位于天花板下方和新鲜空气上方，表明存在稳定的温度分层。然而，在较低的 HRR 和较高的风速下，竖井只能排出少量的烟雾和热量<h4 id="3-2-竖井下方温度分布"><a href="#3-2-竖井下方温度分布" class="headerlink" title="3.2 竖井下方温度分布"></a>3.2 竖井下方温度分布</h4><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/%E5%9B%BE%2013%20%E7%AB%96%E4%BA%95%E4%B8%8B%E6%96%B9%E5%9E%82%E7%9B%B4%E6%B8%A9%E5%BA%A6%E5%88%86%E5%B8%83" alt="图 10 竖井下方垂直温度分布">出现堵塞现象（plug holing），堵塞现象是否发生取决于竖井内热烟引起的烟囱效应的强度<h4 id="3-3-火灾下游温度"><a href="#3-3-火灾下游温度" class="headerlink" title="3.3 火灾下游温度"></a>3.3 火灾下游温度</h4>火灾下游隧道顶板下的温度变化与环境风的关系较弱。<h2 id="展望"><a href="#展望" class="headerlink" title="展望"></a>展望</h2>此项研究中以热释放率和环境风速为关键参数。在未来研究中，将改变隧道段的长度或火灾与竖井之间的距离，以详细揭示其影响。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tunnel fire</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>智慧性能化建筑防火设计：基于人工智能的烟气运动预测</title>
+    <url>/2021/08/11/%E6%99%BA%E6%85%A7%E6%80%A7%E8%83%BD%E5%8C%96%E5%BB%BA%E7%AD%91%E9%98%B2%E7%81%AB%E8%AE%BE%E8%AE%A1%EF%BC%9A%E5%9F%BA%E4%BA%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E7%83%9F%E6%B0%94%E8%BF%90%E5%8A%A8%E9%A2%84%E6%B5%8B/</url>
+    <content><![CDATA[<h1 id="Smart-performance-based-design-for-building-fire-safety-Prediction-of-smoke-motion-via-AI"><a href="#Smart-performance-based-design-for-building-fire-safety-Prediction-of-smoke-motion-via-AI" class="headerlink" title="Smart performance-based design for building fire safety: Prediction of smoke motion via AI"></a>Smart performance-based design for building fire safety: Prediction of smoke motion via AI</h1><p><cite>* Authors: [[Ling-chu Su]], [[Xiqiang Wu]], [[Xiaoning Zhang]], [[Xinyan Huang]]</cite> 香港理工黄鑫炎老师</p>
+<ul>
+<li>Date: [[11/2021]]</li>
+</ul>
+<ul>
+<li>DOI: <a href="https://doi.org/10.1016/j.jobe.2021.102529">10.1016/j.jobe.2021.102529</a><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2></li>
+</ul>
+<ul>
+<li>提出了一个基于性能化设计（PBD：performance-based design ）的智能框架，用<strong>AI模型</strong>预测中庭火灾中的<strong>烟气运动</strong>和<strong>ASET</strong>。</li>
+<li>建立了280例场景的模拟数据库，包括不同的中庭尺寸、消防HRR和通风条件来训练TCNN模型，<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="新兴的深度学习模型"><a href="#新兴的深度学习模型" class="headerlink" title="新兴的深度学习模型"></a>新兴的深度学习模型</h3>模仿人脑，包括卷积神经网络（CNN）、转置卷积神经网络（TCNN）和递归神经网络（RNN）。与传统的人工智能模型（如机器学习模型）相比，深度学习模型需要<strong>从海量数据中自动学习隐藏的特征</strong>，这在图像处理和识别中得到了广泛的应用。<h3 id="人工智能算法、物联网（IoT）和大数据"><a href="#人工智能算法、物联网（IoT）和大数据" class="headerlink" title="人工智能算法、物联网（IoT）和大数据"></a>人工智能算法、物联网（IoT）和大数据</h3><h2 id="研究内容"><a href="#研究内容" class="headerlink" title="研究内容"></a>研究内容</h2><h3 id="智能可用安全疏散时间评估-smart-ASET-assessment"><a href="#智能可用安全疏散时间评估-smart-ASET-assessment" class="headerlink" title="智能可用安全疏散时间评估 smart ASET assessment"></a>智能可用安全疏散时间评估 smart ASET assessment</h3></li>
+<li>ASET通常是基于火灾和烟雾行为的预测得出。</li>
+<li>RSET人们离开火灾区域到达疏散通道或安全区域所需的时间</li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811170536.png" alt="传统性能化设计">传统性能化设计中ASET的设计和批准一般包括（1）场景识别和建模设计（2）基于CFD的火灾建模（3）验收批准<h4 id="基于AI的ASET评估"><a href="#基于AI的ASET评估" class="headerlink" title="基于AI的ASET评估"></a>基于AI的ASET评估</h4><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811170612.png"><h5 id="预先建立一个大数据库"><a href="#预先建立一个大数据库" class="headerlink" title="预先建立一个大数据库"></a>预先建立一个大数据库</h5><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811171454.png"><ul>
+<li>提取模拟的中庭火灾烟雾剖面生成大型数据库【一个输出矩阵】</li>
+<li>此外CFD模型中的输入参数：中庭楼层面积、高度、通风条件HRR和排烟率也输入AI模型【一个输入向量】</li>
+<li>形成一个训练样本对，共同作为数据库，来训练AI模型</li>
+<li>输入表的每一列和输出矩阵的每一帧都使用最小-最大归一化函数。之后，样本对被随机打乱，分成<strong>训练、验证和测试数据集</strong>，比率分别为0.6、0.2和0.2。训练数据集用于训练模型，验证数据集用于在训练时<strong>评估拟合模型</strong>，测试数据集用于在训练后的未知样本上==估计拟合模型的质量==。<h5 id="人工智能算法训练"><a href="#人工智能算法训练" class="headerlink" title="人工智能算法训练"></a>人工智能算法训练</h5><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811173224.png" alt="深度学习AI模型的详细架构"></li>
+</ul>
+</li>
+<li>输入层按顺序读取输入向量的五个值，然后，隐藏在输入内部的信息通过四个密集层得到丰富。将向量扩展为1024维后，将其重塑为大小为（4×4×64）的长方体，同时保持向量中的值不变。</li>
+<li>然后，数据通过8个TCNN层和1个CNN层进行上采样，以生成两个维度均为50像素的图像。然后，可以将生成的图像与实际的一个输出进行比较，对AI模型进行训练以最小化它们的差异。</li>
+<li>在训练过程中，使用三个脱落层来缓解过度贴合</li>
+<li>图5所示的层数、每层类型、输入和输出尺寸的超级参数由初步研究确定。**每层的权重将通过训练过程更新。</li>
+<li>采用决定系数R2对训练模型进行评价 。<h2 id="结果与讨论"><a href="#结果与讨论" class="headerlink" title="结果与讨论"></a>结果与讨论</h2><h3 id="4-3-烟雾可见度预测"><a href="#4-3-烟雾可见度预测" class="headerlink" title="4.3 烟雾可见度预测"></a>4.3 烟雾可见度预测</h3><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811174924.png">显示烟雾可见度分布的图像非常直观，但使用这些图像很难对ASET做出快速决策。因此使用后处理程序smokeview<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811175001.png"><h3 id="4-4-ASET评估"><a href="#4-4-ASET评估" class="headerlink" title="4.4 ASET评估"></a>4.4 ASET评估</h3><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210811175234.png">图10比较了20分钟时CFD模拟计算的10米能见度高度和Al模型预测的<em>10米能见度高度</em>。理想情况下，如果AI模型能够完美预测结果，则所有数据点都将位于对角线上。（蓝色（红色）点表示通过（未通过）性能化设计要求）</li>
+<li>结果表明，所提出的AI模型能够预测大型中庭可见度（或<strong>烟层）剖面的演变</strong>，从而<strong>确定</strong>给定中庭和火灾设计中的<strong>ASET</strong>。<h3 id="人类-vs-AI"><a href="#人类-vs-AI" class="headerlink" title="人类 vs. AI"></a>人类 vs. AI</h3></li>
+<li>邀请了六名对火灾动力学和建模有着丰富知识的参与者评估两个中庭案例的ASET</li>
+<li>专家意见法：在10分钟内给出每个案例的“直觉”答案</li>
+<li>CFD模拟专家意见：进行了基于CFD的模拟，并提交了自己的模拟结果和判断。</li>
+<li>结果：与专业消防工程师基于CFD的常规PBD相比，AI方法在<strong>更短的时间内</strong>提供了<strong>更一致和可靠</strong>的结果。</li>
+</ul>
+<hr>
+<ul>
+<li>个人笔记仅供参考</li>
+</ul>
+]]></content>
+      <categories>
+        <category>智慧消防</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>蛤蜊壳在膨胀型防火涂料中的阻燃和抑烟作用</title>
+    <url>/2021/05/21/%E8%9B%A4%E8%9C%8A%E5%A3%B3%E5%9C%A8%E8%86%A8%E8%83%80%E5%9E%8B%E9%98%B2%E7%81%AB%E6%B6%82%E6%96%99%E4%B8%AD%E7%9A%84%E9%98%BB%E7%87%83%E5%92%8C%E6%8A%91%E7%83%9F%E4%BD%9C%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="蛤蜊壳在膨胀型防火涂料中的阻燃和抑烟作用"><a href="#蛤蜊壳在膨胀型防火涂料中的阻燃和抑烟作用" class="headerlink" title="蛤蜊壳在膨胀型防火涂料中的阻燃和抑烟作用"></a>蛤蜊壳在膨胀型防火涂料中的阻燃和抑烟作用</h1><ul>
+<li>作者：李耀庄 教授，冯钰微，徐志胜 教授，颜 龙，贾宏煜</li>
+<li>期刊：中国安全科学学报</li>
+<li>发表时间 2020-07</li>
+<li>关键词 #蛤蜊壳; #膨胀型防火涂料; #阻燃性能; #抑烟性能; #协效作用</li>
+<li>文献来源：<a href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&amp;dbname=CJFDLAST2020&amp;filename=ZAQK202007007&amp;uniplatform=NZKPT&amp;v=k0q9KyhKmsvvWoofGTzlZEyblcJ7iQVAUpwkiQWeVRXFDWPG2Pr1bPo8NXiyGSFo">https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&amp;dbname=CJFDLAST2020&amp;filename=ZAQK202007007&amp;uniplatform=NZKPT&amp;v=k0q9KyhKmsvvWoofGTzlZEyblcJ7iQVAUpwkiQWeVRXFDWPG2Pr1bPo8NXiyGSFo</a><h2 id="涂料机理描述与研究现状"><a href="#涂料机理描述与研究现状" class="headerlink" title="涂料机理描述与研究现状"></a>涂料机理描述与研究现状</h2></li>
+<li>膨胀阻燃体系在受热时，<em>酸源</em>首先分解<em>释放出游离子酸类</em>促进成炭剂<em>脱水交联成炭</em>，同时气源释放<em>不燃性气体促进炭层膨胀</em>，以有效阻隔热量和物质传递。</li>
+<li>硅丙乳液作为一种常用的粘结剂，具有耐水、耐酸、耐碱、抗污的良好性能</li>
+<li>单纯 APP-PER-MEL 阻燃体系存在阻燃效率低、<em>炭层结构不致密</em>、<em>生烟量大</em>等缺点，通常需添加阻燃添加剂以提高膨胀阻燃体系<strong>的阻燃和抑烟效率</strong></li>
+<li>生物填料具有环境友好性和可再生性，应用前景广泛，蛤蜊壳研究较少<h2 id="研究方法"><a href="#研究方法" class="headerlink" title="研究方法"></a>研究方法</h2></li>
+<li>实验原料<ul>
+<li>膨胀阻燃体系： APP-PER-MEL，</li>
+<li>粘结剂：硅丙乳液，</li>
+<li>分别添加质量分数为 1%、2%、4%、6%的蛤蜊壳生物填料作为阻燃添加剂制备膨胀型防火涂料，探讨蛤蜊壳生物填料含量对膨胀型防火涂料阻燃和抑烟性能的影响<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/B(%60%7E8%7D906T_%5BYPL)%601GPI7A.png"></li>
+</ul>
+</li>
+<li> 结合扫描电镜 ( Scanning Electron Microscopy，SEM) 、热重分析 ( Thermogravimetric Analysis，TGA) 、X－射线能谱仪 ( Energy-Dispersive Spectroscopy，EDS) 等探讨蛤蜊壳生物填料与膨胀阻燃体系之间的协效阻燃和抑烟作用机制。<h2 id="测试与结果"><a href="#测试与结果" class="headerlink" title="测试与结果"></a>测试与结果</h2><h3 id="蛤蜊壳生物填料的表征"><a href="#蛤蜊壳生物填料的表征" class="headerlink" title="蛤蜊壳生物填料的表征"></a>蛤蜊壳生物填料的表征</h3></li>
+<li>SEM //EDS //X 射线衍射</li>
+<li>蛤蜊壳生物填料微观形貌<br>呈不规则球粒状结构，直径分布在 0. 1 ～ 10 μm 之间，主要成分为CaCO3<h3 id="防火性能测试"><a href="#防火性能测试" class="headerlink" title="防火性能测试"></a>防火性能测试</h3></li>
+<li>按照《饰面型防火涂料》，分别利用小室燃烧仪、隧道仪和模拟大板燃烧法测试</li>
+<li>小室燃烧法，得到质量损失、炭化体积和膨胀倍数<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210907123003.png"></li>
+<li>模拟大板燃烧法，得到背温曲线<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210907123056.png"><h3 id="生烟性能测试"><a href="#生烟性能测试" class="headerlink" title="生烟性能测试"></a>生烟性能测试</h3></li>
+<li>参照《建筑材料燃烧或分解的烟密度试验方法》</li>
+<li>膨胀型防火涂料在<em>烟密度测试</em>中的<em>光吸收率</em>曲线如图 4 所示。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210907123207.png"><h3 id="热重分析"><a href="#热重分析" class="headerlink" title="热重分析"></a>热重分析</h3></li>
+<li>采用 TGA 仪在氮气气氛下进行热重分析，选取 5～ 10 mg 试样放置在坩埚中，然后以 20 ℃ /min 的升温速率从 25 ℃ 加热到 800 ℃，氮气流量为 40 mL /min。样品的理论残炭量 ( Wtheo ) 采用下式计算:<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210907122507.png"></li>
+<li><img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210907123303.png">由图 5 可以看出，涂料的热解过程可以分为 3 个阶段: <ul>
+<li>第 1 阶段在 150 ～ 240 ℃，该温度区间曲线下降缓慢，质量损失较少; </li>
+<li>第 2 阶段在 240 ～ 650 ℃，该阶段曲线下降较快，质量损失较大，出现明显的 DTG 峰值; </li>
+<li>第 3 阶段为 650 ～ 800 ℃，该阶段为炭层的高温分解阶段，质量损失较少。</li>
+</ul>
+</li>
+<li>添加蛤蜊壳生物填料后，试样的初始<em>分解温度</em>明显提高，试样的<em>质量损失速率</em>和峰值质量损失速率随蛤蜊壳生物填料的加入而下降，其中质量损失速率的下降有利于膨胀阻燃材料在热解过程中<em>形成更多的残炭量</em>。<h3 id="炭层结构分析"><a href="#炭层结构分析" class="headerlink" title="炭层结构分析"></a>炭层结构分析</h3></li>
+<li>添加适量的蛤蜊壳生物填料可以<em>提高炭层的致密性和连续性</em>，以<em>有效阻隔热量和物质传递</em>，进而在燃烧过程中<em>表现出优异的阻燃和抑烟性能</em></li>
+<li>空隙和孔洞的存在无法有效地阻隔燃烧过程中烟气和热量的释放，进而表现出较高的生烟量和较差的隔热性能</li>
+<li>炭层结构的红外光谱如图 8 所示，可以看到不同化学键的伸缩振动峰。<img src="https://raw.githubusercontent.com/Hannieliao/Image0909/main/Pasted%20image%2020210907123717.png"></li>
+<li>蛤蜊壳生物填料的加入可促进涂层在燃烧过程中形成更多的含 P 和 O 的交联结构，增强炭层结构的致密性和膨胀高度</li>
+</ul>
+<hr>
+<p>个人笔记仅供参考，原文欣赏请移步CNKI</p>
+]]></content>
+      <categories>
+        <category>防火涂料</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Tunnel fire</title>
+    <url>/categories/index.html</url>
+    <content><![CDATA[<hr>
+<p>title: 智慧消防<br>type: “categories”<br>layout: “categories”</p>
+<hr>
+<hr>
+<p>title: 防火涂料<br>type: “categories”<br>layout: “categories”</p>
+<hr>
+]]></content>
+  </entry>
+</search>
